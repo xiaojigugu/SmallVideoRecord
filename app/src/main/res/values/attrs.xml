@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomProgressBar">
+        <attr name="style" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="ring" value="1" />
+        </attr>
+        <attr name="ringWidth" format="integer" />
+    </declare-styleable>
+</resources>
