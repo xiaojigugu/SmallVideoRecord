@@ -83,23 +83,24 @@ public class PlayVideoActivity extends AppCompatActivity {
      * 选择该视频
      */
     private void chooseThisVideo() {
-        File inputFile=new File(videoPath);
-        String inputFileName=inputFile.getName().substring(0,inputFile.getName().lastIndexOf("."));
-        outPutVideoPath = inputFile.getParentFile().getAbsolutePath()+"/"+inputFileName+"_compress.mp4";
-        Log.i(TAG,"video compress output path="+ outPutVideoPath);
+        File inputFile = new File(videoPath);
+        String inputFileName = inputFile.getName().substring(0, inputFile.getName().lastIndexOf("."));
+        outPutVideoPath = inputFile.getParentFile().getAbsolutePath() + "/" + inputFileName + "_compress.mp4";
+        Log.i(TAG, "video compress output path=" + outPutVideoPath);
         startCompress();
     }
 
     /**
      * 返回压缩结果
+     *
      * @param isCompressSuccess
      */
-    private void returnResult(String finalVideoPath,boolean isCompressSuccess){
-        Intent intent=new Intent();
-        intent.putExtra("path",finalVideoPath);
-        intent.putExtra("duration",mediaPlayView.getDuration());
-        intent.putExtra("isCompressSuccess",isCompressSuccess);
-        setResult(RESULT_OK,intent);
+    private void returnResult(String finalVideoPath, boolean isCompressSuccess) {
+        Intent intent = new Intent();
+        intent.putExtra("path", finalVideoPath);
+        intent.putExtra("duration", mediaPlayView.getDuration());
+        intent.putExtra("isCompressSuccess", isCompressSuccess);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -107,12 +108,12 @@ public class PlayVideoActivity extends AppCompatActivity {
      * 视频压缩开始
      */
     private void startCompress() {
-        VideoParam videoParam=new VideoParam(videoPath);
+        VideoParam videoParam = new VideoParam(videoPath);
         videoParam.obtainVideoParam();
-        int videoRotation=videoParam.getVideoRotation();
-        int videoWidth=videoParam.getVideoWidth();
-        int videoHeight=videoParam.getVideoHeight();
-        String videoDuration=videoParam.getDuration();
+        int videoRotation = videoParam.getVideoRotation();
+        int videoWidth = videoParam.getVideoWidth();
+        int videoHeight = videoParam.getVideoHeight();
+        String videoDuration = videoParam.getDuration();
         double videoLength = Double.parseDouble(videoDuration) / 1000.00;
 
         try {
@@ -136,12 +137,12 @@ public class PlayVideoActivity extends AppCompatActivity {
                             "-crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 480x800 -aspect 9:16 " + outPutVideoPath;
                 }
             }
-            if (mProcessingDialog==null){
-                mProcessingDialog=new CustomProgressDialog(this);
+            if (mProcessingDialog == null) {
+                mProcessingDialog = new CustomProgressDialog(this);
             }
             mProcessingDialog.show();
             mProcessingDialog.setProgress(0);
-            execCommand(cmd,videoLength);
+            execCommand(cmd, videoLength);
         } catch (Exception e) {
             Log.i(TAG, "startCompress=e=" + e.getMessage());
         }
@@ -149,8 +150,8 @@ public class PlayVideoActivity extends AppCompatActivity {
 
     private void execCommand(final String cmd, final double videoLength) throws FFmpegCommandAlreadyRunningException, FFmpegNotSupportedException {
         Log.i(TAG, "cmd= " + cmd);
-        if (mCompressor==null){
-            mCompressor=new Compressor(this);
+        if (mCompressor == null) {
+            mCompressor = new Compressor(this);
         }
         mCompressor.loadBinary(new InitListener() {
             @Override
@@ -168,32 +169,32 @@ public class PlayVideoActivity extends AppCompatActivity {
             public void onExecSuccess(String message) {
                 mProcessingDialog.dismiss();
                 Log.i(TAG, "video compress successfully ");
-                returnResult(outPutVideoPath,true);
+                returnResult(outPutVideoPath, true);
             }
 
             @Override
             public void onExecFail(String reason) {
                 Log.i(TAG, "fail " + reason);
                 mProcessingDialog.dismiss();
-                returnResult(videoPath,false);
+                returnResult(videoPath, false);
             }
 
             @Override
             public void onExecProgress(String message) {
                 try {
                     Log.i(TAG, "progress " + message);
-                    double switchNum = mCompressor.getProgress(message,videoLength);
+                    double switchNum = mCompressor.getProgress(message, videoLength);
                     if (switchNum == 10000) {
                         //如果找不到压缩的片段，返回为10000
                         Log.i(TAG, "10000");
                         mProcessingDialog.setProgress(0);
                     } else {
-                        mProcessingDialog.setProgress((int) (mCompressor.getProgress(message,videoLength) / 10));
+                        mProcessingDialog.setProgress((int) (mCompressor.getProgress(message, videoLength) / 10));
                     }
                 } catch (Exception e) {
                     mProcessingDialog.dismiss();
                     Log.i(TAG, "e=" + e.getMessage());
-                    returnResult(videoPath,false);
+                    returnResult(videoPath, false);
                 }
             }
         });
@@ -206,30 +207,13 @@ public class PlayVideoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (!mediaPlayView.isPlaying()) {
-            mediaPlayView.start();
-        }
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mediaPlayView.isPlaying()) {
-            mediaPlayView.pause();
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         releaseCompressor();
     }
 
     private void releaseCompressor() {
-        if (mCompressor!=null){
+        if (mCompressor != null) {
             mCompressor.destory();
         }
     }

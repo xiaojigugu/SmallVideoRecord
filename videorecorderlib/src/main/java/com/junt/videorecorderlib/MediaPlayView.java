@@ -21,6 +21,7 @@ public class MediaPlayView extends SurfaceView implements SurfaceHolder.Callback
     private Uri uri;
     private String mediaPath;
     private boolean isLooping;
+    private boolean isReady=false;
 
     public MediaPlayView(Context context) {
         this(context, null);
@@ -97,6 +98,7 @@ public class MediaPlayView extends SurfaceView implements SurfaceHolder.Callback
      */
     @Override
     public void onPrepared(MediaPlayer mp) {
+        isReady=true;
         if (onReadyListener != null) {
             onReadyListener.onReady(mp);
         }
@@ -123,29 +125,37 @@ public class MediaPlayView extends SurfaceView implements SurfaceHolder.Callback
         return mediaPlayer.getDuration();
     }
 
+    public boolean isReady() {
+        return isReady;
+    }
+
     public boolean isPlaying() {
-        if (mediaPlayer == null) return false;
-        return mediaPlayer.isPlaying();
+        if (mediaPlayer == null) {
+            return false;
+        } else {
+            return mediaPlayer.isPlaying();
+        }
+
     }
 
     public void stop() {
         if (mediaPlayer != null)
-        mediaPlayer.stop();
+            mediaPlayer.stop();
     }
 
     public void pause() {
-        if (mediaPlayer != null)
-        mediaPlayer.pause();
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
+            mediaPlayer.pause();
     }
 
     private void reset() {
         if (mediaPlayer != null)
-        mediaPlayer.reset();
+            mediaPlayer.reset();
     }
 
     public void start() {
         if (mediaPlayer != null)
-        mediaPlayer.start();
+            mediaPlayer.start();
     }
 
     public MediaPlayView setLooping(boolean isLooping) {
