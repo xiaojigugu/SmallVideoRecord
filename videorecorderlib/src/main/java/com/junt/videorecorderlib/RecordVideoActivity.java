@@ -115,6 +115,8 @@ public class RecordVideoActivity extends AppCompatActivity implements
         CamcorderProfile profile = CamcorderProfile.get(sp.getInt(RecordConfig.CONFIG_QUALITY, CamcorderProfile.QUALITY_480P));
         profile.videoFrameWidth = optimalSize.width;
         profile.videoFrameHeight = optimalSize.height;
+        profile.videoBitRate=sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 5 * 1280 * 720);
+        profile.videoFrameRate=sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30);
         // likewise for the camera object itself.
         parameters.setPreviewSize(profile.videoFrameWidth, profile.videoFrameHeight);
         parameters.setFocusMode(sp.getString(RecordConfig.CONFIG_FOCUS_MODE, Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO));
@@ -135,8 +137,10 @@ public class RecordVideoActivity extends AppCompatActivity implements
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         mMediaRecorder.setProfile(profile);
-        mMediaRecorder.setVideoFrameRate(sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30));
-        mMediaRecorder.setVideoEncodingBitRate(sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 5 * 1280 * 720));
+
+//        mMediaRecorder.setVideoFrameRate(sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30));
+//        mMediaRecorder.setVideoEncodingBitRate(sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 5 * 1280 * 720));
+
         String defaultPath = Environment.getExternalStorageDirectory() + "/junt/video/";
         String outputPath = sp.getString(RecordConfig.CONFIG_OUTPUT_PATH, defaultPath) + "VID_" + System.currentTimeMillis() + ".mp4";
         mOutputFile = new File(outputPath);
