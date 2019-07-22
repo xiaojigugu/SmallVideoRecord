@@ -135,7 +135,7 @@ public class RecordVideoActivity extends AppCompatActivity implements
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         mMediaRecorder.setProfile(profile);
-        mMediaRecorder.setVideoFrameRate(sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 20));
+        mMediaRecorder.setVideoFrameRate(sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30));
         mMediaRecorder.setVideoEncodingBitRate(sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 5 * 1280 * 720));
         String defaultPath = Environment.getExternalStorageDirectory() + "/junt/video/";
         String outputPath = sp.getString(RecordConfig.CONFIG_OUTPUT_PATH, defaultPath) + "VID_" + System.currentTimeMillis() + ".mp4";

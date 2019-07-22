@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 .with(this)
                 .setQuality(RecordConfig.Quality.QUALITY_480P)
                 .setEncodingBitRate(5*1280*720)
-                .setFrameRate(20)
+                .setFrameRate(30)      //请设置>=30
                 .setMaxDuration(6*1000)
                 .setFocusMode(RecordConfig.FocusMode.FOCUS_MODE_CONTINUOUS_VIDEO)
                 .setOutputPath("/smallvideo/")
