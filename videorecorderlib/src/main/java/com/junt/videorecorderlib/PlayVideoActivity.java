@@ -83,6 +83,7 @@ public class PlayVideoActivity extends AppCompatActivity {
      * 选择该视频
      */
     private void chooseThisVideo() {
+
         File inputFile = new File(videoPath);
         String inputFileName = inputFile.getName().substring(0, inputFile.getName().lastIndexOf("."));
         outPutVideoPath = inputFile.getParentFile().getAbsolutePath() + "/" + inputFileName + "_compress.mp4";
