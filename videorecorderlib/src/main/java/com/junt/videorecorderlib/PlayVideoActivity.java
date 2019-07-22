@@ -32,6 +32,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private String videoPath;
     private Compressor mCompressor;
     private CustomProgressDialog mProcessingDialog;
+    private String outPutVideoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,17 +85,18 @@ public class PlayVideoActivity extends AppCompatActivity {
     private void chooseThisVideo() {
         File inputFile=new File(videoPath);
         String inputFileName=inputFile.getName().substring(0,inputFile.getName().lastIndexOf("."));
-        String outPutVideoPath=inputFile.getParentFile().getAbsolutePath()+"/"+inputFileName+"_compress.mp4";
-        Log.i(TAG,"video compress output path="+outPutVideoPath);
-        startCompress(outPutVideoPath);
+        outPutVideoPath = inputFile.getParentFile().getAbsolutePath()+"/"+inputFileName+"_compress.mp4";
+        Log.i(TAG,"video compress output path="+ outPutVideoPath);
+        startCompress();
     }
 
     /**
      * 返回压缩结果
      * @param isCompressSuccess
      */
-    private void returnResult(boolean isCompressSuccess){
+    private void returnResult(String finalVideoPath,boolean isCompressSuccess){
         Intent intent=new Intent();
+        intent.putExtra("path",finalVideoPath);
         intent.putExtra("isCompressSuccess",isCompressSuccess);
         setResult(RESULT_OK,intent);
         finish();
@@ -103,7 +105,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     /**
      * 视频压缩开始
      */
-    private void startCompress(String outPutVideoPath) {
+    private void startCompress() {
         VideoParam videoParam=new VideoParam(videoPath);
         videoParam.obtainVideoParam();
         int videoRotation=videoParam.getVideoRotation();
@@ -165,14 +167,14 @@ public class PlayVideoActivity extends AppCompatActivity {
             public void onExecSuccess(String message) {
                 mProcessingDialog.dismiss();
                 Log.i(TAG, "video compress successfully ");
-                returnResult(true);
+                returnResult(outPutVideoPath,true);
             }
 
             @Override
             public void onExecFail(String reason) {
                 Log.i(TAG, "fail " + reason);
                 mProcessingDialog.dismiss();
-                returnResult(false);
+                returnResult(videoPath,false);
             }
 
             @Override
@@ -190,7 +192,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     mProcessingDialog.dismiss();
                     Log.i(TAG, "e=" + e.getMessage());
-                    returnResult(false);
+                    returnResult(videoPath,false);
                 }
             }
         });

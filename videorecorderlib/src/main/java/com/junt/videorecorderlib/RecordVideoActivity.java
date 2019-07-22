@@ -205,8 +205,14 @@ public class RecordVideoActivity extends AppCompatActivity implements
                 showRecordController();
                 deleteFile();
             }else if (resultCode==RESULT_OK){
+                boolean isCompress=data.getBooleanExtra("isCompressSuccess",false);
+                if (isCompress){
+                    Log.i(TAG,"video compress error，return the original video");
+                }else {
+                    Log.i(TAG,"video compress success，return the compressed video");
+                }
                 Intent intent=new Intent();
-                intent.putExtra("path",mOutputFile.getAbsolutePath());
+                intent.putExtra("path",data.getStringExtra("path"));
                 setResult(RESULT_OK,intent);
                 finish();
             }
