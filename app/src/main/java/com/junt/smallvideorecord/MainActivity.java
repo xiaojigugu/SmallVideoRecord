@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMaxDuration(6*1000)
                 .setFocusMode(RecordConfig.FocusMode.FOCUS_MODE_CONTINUOUS_VIDEO)
                 .setOutputPath("/smallvideo/")
-                .obtainVideo(MainActivity.this,REQUEST_CODE_VIDEO);
+                .obtainVideo(REQUEST_CODE_VIDEO);
     }
 
     @Override

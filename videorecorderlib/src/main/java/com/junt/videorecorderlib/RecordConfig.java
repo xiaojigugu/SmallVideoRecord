@@ -106,11 +106,18 @@ public class RecordConfig {
         return data.getStringExtra("path");
     }
 
-    public void obtainVideo(Context packageContext, int requestCode) {
+    public static String obtainVideoDuration(Intent data){
+        if (data==null){
+            throw new NullPointerException("data is NULL");
+        }
+        return data.getStringExtra("duration");
+    }
+
+    public void obtainVideo( int requestCode) {
         if (activity == null) {
             throw new NullPointerException("Please innovate method 'with()' first");
         }
-        activity.startActivityForResult(new Intent(packageContext, RecordVideoActivity.class), requestCode);
+        activity.startActivityForResult(new Intent(activity, RecordVideoActivity.class), requestCode);
     }
 
     public static class Quality {

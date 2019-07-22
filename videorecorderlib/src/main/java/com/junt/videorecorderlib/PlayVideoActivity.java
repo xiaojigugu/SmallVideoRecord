@@ -97,6 +97,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private void returnResult(String finalVideoPath,boolean isCompressSuccess){
         Intent intent=new Intent();
         intent.putExtra("path",finalVideoPath);
+        intent.putExtra("duration",mediaPlayView.getDuration());
         intent.putExtra("isCompressSuccess",isCompressSuccess);
         setResult(RESULT_OK,intent);
         finish();
