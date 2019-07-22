@@ -5,5 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="transBg">#D81B60</color>
     <color name="gray">#33747474</color>
-    <color name="darkgray">#80747474</color>
+    <color name="darkGray">#80747474</color>
 </resources>
