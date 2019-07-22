@@ -106,11 +106,11 @@ public class RecordConfig {
         return data.getStringExtra("path");
     }
 
-    public static String obtainVideoDuration(Intent data){
+    public static int obtainVideoDuration(Intent data){
         if (data==null){
             throw new NullPointerException("data is NULL");
         }
-        return data.getStringExtra("duration");
+        return data.getIntExtra("duration",0);
     }
 
     public void obtainVideo( int requestCode) {

@@ -68,7 +68,20 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==REQUEST_CODE_VIDEO&&resultCode==RESULT_OK){
             String videoPath=RecordConfig.obtainVideoPath(data);
-            Log.i(this.getClass().getSimpleName(),"obtainVideoPath="+videoPath);
+            int duration=RecordConfig.obtainVideoDuration(data);
+            Log.i(this.getClass().getSimpleName(),"obtainVideoPath="+videoPath+" duration="+generateTime(duration));
         }
+    }
+    /**
+     * 转换时间显示
+     *
+     * @param time 毫秒
+     */
+    public static String generateTime(long time) {
+        int totalSeconds = (int) (time / 1000);
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
     }
 }
