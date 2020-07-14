@@ -16,7 +16,6 @@ public class PlayVideoActivity extends AppCompatActivity {
     private final String TAG = PlayVideoActivity.class.getSimpleName();
     private MediaPlayView mediaPlayView;
     private String videoPath;
-    private String outPutVideoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

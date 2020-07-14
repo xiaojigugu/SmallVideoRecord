@@ -109,12 +109,7 @@ public class RecordVideoActivity extends AppCompatActivity implements
         Camera.Size optimalSize = CameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
                 mSupportedPreviewSizes, surfaceView.getWidth(), surfaceView.getHeight());
         mCamera.setDisplayOrientation(90);
-        CamcorderProfile profile = CamcorderProfile.get(sp.getInt(RecordConfig.CONFIG_QUALITY, CamcorderProfile.QUALITY_480P));
-        profile.videoFrameWidth = optimalSize.width;
-        profile.videoFrameHeight = optimalSize.height;
-        profile.videoBitRate = sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 5 * 1280 * 720);
-        profile.videoFrameRate = sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30);
-        parameters.setPreviewSize(profile.videoFrameWidth, profile.videoFrameHeight);
+        parameters.setPreviewSize(optimalSize.width, optimalSize.height);
         parameters.setFocusMode(sp.getString(RecordConfig.CONFIG_FOCUS_MODE, Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO));
         parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
         mCamera.setParameters(parameters);
@@ -131,10 +126,14 @@ public class RecordVideoActivity extends AppCompatActivity implements
         mMediaRecorder.setCamera(mCamera);
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        mMediaRecorder.setProfile(CamcorderProfile.get(sp.getInt(RecordConfig.CONFIG_QUALITY, CamcorderProfile.QUALITY_480P)));
 
-//        mMediaRecorder.setVideoFrameRate(sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30));
-//        mMediaRecorder.setVideoEncodingBitRate(sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 5 * 1280 * 720));
+        CamcorderProfile camcorderProfile = CamcorderProfile.get(sp.getInt(RecordConfig.CONFIG_QUALITY, CamcorderProfile.QUALITY_720P));
+        camcorderProfile.videoBitRate = sp.getInt(RecordConfig.CONFIG_ENCODING_BIT_RATE, 1000_000);
+        camcorderProfile.fileFormat = MediaRecorder.OutputFormat.MPEG_4;
+        camcorderProfile.videoCodec = MediaRecorder.VideoEncoder.H264;
+        camcorderProfile.audioCodec = MediaRecorder.AudioEncoder.AAC;
+        camcorderProfile.videoFrameRate = sp.getInt(RecordConfig.CONFIG_FRAME_RATE, 30);
+        mMediaRecorder.setProfile(camcorderProfile);
 
         String defaultPath = Environment.getExternalStorageDirectory() + "/junt/video/";
         String outputPath = sp.getString(RecordConfig.CONFIG_OUTPUT_PATH, defaultPath) + "VID_" + System.currentTimeMillis() + ".mp4";
@@ -142,11 +141,16 @@ public class RecordVideoActivity extends AppCompatActivity implements
         if (!mOutputFile.getParentFile().exists()) {
             mOutputFile.getParentFile().mkdirs();
         }
+
         mMediaRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+
         mMediaRecorder.setOrientationHint(90);
+
         mMediaRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface());
+
         MAX_DURATION = sp.getInt(RecordConfig.CONFIG_MAX_DURATION, 6 * 1000);
         mMediaRecorder.setMaxDuration(MAX_DURATION);
+
         try {
             mMediaRecorder.setOnInfoListener(this);
             mMediaRecorder.setOnErrorListener(this);
@@ -313,17 +317,17 @@ public class RecordVideoActivity extends AppCompatActivity implements
     public boolean onTouch(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
-            long downTime=System.currentTimeMillis();
-            if (downTime-clickTime>1000){
-                if (!isRecording){
+            long downTime = System.currentTimeMillis();
+            if (downTime - clickTime > 1000) {
+                if (!isRecording) {
                     btnRecord.setPressed(true);
                     RecordTask recordTask = new RecordTask();
                     recordTask.execute();
-                }else if (mMediaRecorder!=null){
+                } else if (mMediaRecorder != null) {
                     recordComplete();
                 }
             }
-            clickTime=downTime;
+            clickTime = downTime;
         } else if (action == MotionEvent.ACTION_UP) {
             if (isRecording && mMediaRecorder != null) {
                 recordComplete();
