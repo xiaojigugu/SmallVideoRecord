@@ -1,6 +1,8 @@
 # SmallVideoRecord
 短视频录制
 
+最新地址详见：https://gitee.com/giteeguguji/SmallVideoRecord
+
 ```java
 //开启录制
 RecordConfig
