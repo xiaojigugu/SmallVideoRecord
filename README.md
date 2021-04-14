@@ -1,7 +1,7 @@
 # SmallVideoRecord
 短视频录制
 
-最新地址详见：https://gitee.com/giteeguguji/SmallVideoRecord
+此库已迁移，最新地址详见：https://gitee.com/giteeguguji/SmallVideoRecord
 
 ```java
 //开启录制
